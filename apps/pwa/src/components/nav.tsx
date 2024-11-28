@@ -4,14 +4,14 @@ import { Dice1 } from "lucide-react";
 
 const NAV_ITEMS = {
   pump: { title: "Pump", icon: Dice1, path: "/game/pump" },
-  dump: { title: "Dump", icon: Dice1, path: "/game/dump" },
+  fomo: { title: "Fomo", icon: Dice1, path: "/game/fomo" },
 } as const;
 
 export default function Navbar() {
   const location = useLocation();
   const pathname = location.pathname;
   return (
-    <div className="fixed bottom-0 z-20 flex h-navbar w-full items-center bg-black px-10">
+    <div className="fixed bottom-0 z-20 h-navbar w-full border-t-[1px] border-t-border bg-black px-10 pt-2">
       <div className="mx-auto flex w-full max-w-sm justify-between">
         {Object.entries(NAV_ITEMS).map(
           ([nav, { title, icon: IconComponent, path }]) => (

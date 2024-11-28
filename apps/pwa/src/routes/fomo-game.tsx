@@ -3,9 +3,9 @@ import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import DrumStick from "@/assets/drum-stick";
-import { CreateMemeButton } from "@/components/CreateMemeButton";
+import { MintMemeButton } from "@/components/MintMemeButton";
 
-export default function PumpGame() {
+export default function FomoGame() {
   const [timeLeft, setTimeLeft] = useState(5);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
@@ -100,12 +100,11 @@ export default function PumpGame() {
     <div className="relative h-full w-full items-center justify-center">
       {isShowMint ? (
         <div className="justify-cente flex h-full w-full flex-col items-center">
-          <CreateMemeButton
+          <MintMemeButton
             className="absolute left-1/2 top-40 mx-auto w-fit -translate-x-1/2 bg-black px-8 text-center text-lg font-bold"
-            name="wodden-fish"
-            symbol="WDFH"
-            imageUrl=""
-            description=" Designed for real-world social FOMO, turning memes into a movement. It’s crypto fun with a spiritual twist!"
+            amount={10 ** 9}
+            receiver="0xabcd"
+            tokenAddr="0xabc"
           />
           <div className="absolute bottom-10 h-40 w-40">
             <WoodenFishIcon className="h-full w-full fill-white" />
@@ -129,7 +128,7 @@ export default function PumpGame() {
       ) : (
         <div className="justify-cente flex h-full w-full flex-col items-center">
           <h1 className="organic-text mt-[20vh] text-[56px] text-white">
-            Pump
+            Fomo
           </h1>
 
           <p className="mt-4 max-w-60 text-center text-subtitle text-sub-text">
