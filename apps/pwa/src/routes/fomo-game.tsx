@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import DrumStick from "@/assets/drum-stick";
 import { MintMemeButton } from "@/components/MintMemeButton";
+import * as THREE from 'three'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { getProject } from "@theatre/core";
+import { SheetProvider, editable as e, PerspectiveCamera } from '@theatre/r3f'
+const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
 
 export default function FomoGame() {
   const [timeLeft, setTimeLeft] = useState(5);
@@ -16,6 +21,21 @@ export default function FomoGame() {
   const gravity = 0.9;
   const bounceVelocity = 15; // Upward velocity during bounce
 
+  // three.js scene
+  function Scene({ position }: { position: number }) {
+    return (
+      <SheetProvider sheet={demoSheet}>
+        <PerspectiveCamera theatreKey="Camera" makeDefault position={[0, 2, 5]} fov={75} />
+        <ambientLight intensity={0.5} />
+        <e.pointLight theatreKey="Light" position={[10, 10, 10]} />
+        <e.mesh theatreKey="Cube" rotation={[0, 0, position * Math.PI / 180]}>
+          <boxGeometry args={[0.5, 3, 0.5]} />
+          <meshStandardMaterial color="orange" />
+        </e.mesh>
+      </SheetProvider>
+    );
+  }
+  
   useEffect(() => {
     let motionListener: any;
     if (isRunning) {
@@ -96,6 +116,10 @@ export default function FomoGame() {
     setIsRunning(true); // Start the game
   };
 
+  useEffect(() => {
+    demoSheet.project.ready.then(() => demoSheet.sequence.play({ iterationCount: Infinity, range: [0, 1] }))
+  }, [])
+
   return (
     <div className="relative h-full w-full items-center justify-center">
       {isShowMint ? (
@@ -118,10 +142,9 @@ export default function FomoGame() {
             {timeLeft} s
           </div>
           <div className="absolute bottom-10 left-1/2 z-0 h-40 w-40 -translate-x-1/2">
-            <DrumStick
-              style={{ rotate: `${position - 30}deg` }}
-              className="absolute -bottom-[110px] -right-[360px] z-10 h-96 w-96 fill-white"
-            />
+            <Canvas className="absolute h-full w-full">
+              <Scene position={position} />
+            </Canvas>
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
         </>
