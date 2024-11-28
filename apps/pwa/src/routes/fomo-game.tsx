@@ -2,10 +2,8 @@ import WoodenFishIcon from "@/assets/wooden-fish-icon";
 import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
-import DrumStick from "@/assets/drum-stick";
 import { MintMemeButton } from "@/components/MintMemeButton";
-import * as THREE from 'three'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas } from '@react-three/fiber'
 import { getProject } from "@theatre/core";
 import { SheetProvider, editable as e, PerspectiveCamera } from '@theatre/r3f'
 const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
