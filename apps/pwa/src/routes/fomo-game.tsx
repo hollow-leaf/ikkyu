@@ -9,10 +9,10 @@ import { SheetProvider, editable as e, PerspectiveCamera } from '@theatre/r3f'
 const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
 
 export default function FomoGame() {
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(500);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(true);
   const [isShowMint, setIsShowMint] = useState(false);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
