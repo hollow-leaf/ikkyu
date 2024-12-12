@@ -3,7 +3,7 @@ mod contexts;
 use contexts::*;
 mod states;
 mod error;
-declare_id!("5wM1ZimJpM1P9pPixvnFLo9eHoX46NGzZF6wP3Kpx3zu");
+declare_id!("BgrKMqeLDLxqy4pf34Gse2CnJxUgyPVR8Uc2r7aM676E");
 #[program]
 pub mod anchor_airdrop_escrow {
 
