@@ -1,17 +1,49 @@
 import WoodenFishIcon from "@/assets/wooden-fish-icon";
 import "./pump-game.css";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Dispatch, SetStateAction } from "react";
 import { MintMemeButton } from "@/components/MintMemeButton";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { getProject } from "@theatre/core";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-const sheet = getProject("ikkyu").sheet("Sheet");
+const demoSheet = getProject("Demo Project").sheet("Demo Sheet");
 
-function Bonk() {
-  const { nodes } = useGLTF("/cartoon_bonk.glb"); // Load the .glb file
+function Bonk({
+  isRotating,
+  setIsShowMint,
+}: {
+  isRotating: boolean;
+  setIsShowMint: Dispatch<SetStateAction<boolean>>;
+}) {
+  const { nodes } = useGLTF("/cartoon_bonk.glb");
+  const groupRef = useRef<any>();
+  const [elapsedTime, setElapsedTime] = useState(0);
+  // Rotate the model 360 degrees over 3 seconds
+  const duration = 3;
+
+  useFrame((_, delta) => {
+    if (isRotating) {
+      if (elapsedTime < duration) {
+        setElapsedTime((prevTime) => prevTime + delta);
+
+        const remainingTime = duration - elapsedTime;
+        const velocity =
+          ((10 * Math.PI) / duration) * (remainingTime / duration);
+
+        if (groupRef.current) {
+          groupRef.current.rotation.y += velocity * delta;
+        }
+      } else {
+        // Stop the rotation at [0, 3, 0]
+        if (groupRef.current) {
+          groupRef.current.rotation.set(0, 3, 0);
+        }
+        setIsShowMint(true);
+      }
+    }
+  });
   return (
-    <group dispose={null}>
+    <group ref={groupRef} dispose={null} rotation={[0, 0, 0]}>
       <mesh
         castShadow
         receiveShadow
@@ -24,8 +56,9 @@ function Bonk() {
   );
 }
 
-function Stick() {
+function Stick({ position }: { position: number }) {
   const { nodes, materials } = useGLTF("/cartoon_stick.glb");
+  const rotation = 2.1 + (position / 100) * (3.2 - 2.1);
   return (
     <group dispose={null} position={[-0.8, 0, 0.02]}>
       <group scale={0.01}>
@@ -35,8 +68,7 @@ function Stick() {
           //@ts-ignore
           geometry={nodes.MOD_STICK_hatlas_0.geometry}
           material={materials.hatlas}
-          // y:[2.1, 2.7]
-          rotation={[1, 2.7, 0]}
+          rotation={[1, rotation, 0]}
           scale={[2, 2, 2]}
         />
       </group>
@@ -45,21 +77,22 @@ function Stick() {
 }
 
 export default function FomoGame() {
-  const [timeLeft, setTimeLeft] = useState(500);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [score, setScore] = useState(0);
   const [position, setPosition] = useState(0);
-  const [isRunning, setIsRunning] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
   const [isShowMint, setIsShowMint] = useState(false);
   const velocity = useRef(0);
   const lastBounceTime = useRef(0);
   const gravity = 0.9;
   const bounceVelocity = 15; // Upward velocity during bounce
-
+  const [isRotating, setIsRotating] = useState(false);
+  console.log("isShowMint", isShowMint);
   useEffect(() => {
     let motionListener: any;
     if (isRunning) {
       motionListener = (event: DeviceMotionEvent) => {
-        const zTilt = event.accelerationIncludingGravity?.z || 0; // Tilt along the Z-axis
+        const zTilt = event.accelerationIncludingGravity?.z || 0;
         const currentTime = Date.now();
 
         if (
@@ -87,7 +120,7 @@ export default function FomoGame() {
   // Update position
   useEffect(() => {
     let interval: any;
-    if (isRunning) {
+    if (isRunning && timeLeft !== 0) {
       interval = setInterval(() => {
         setPosition((prevPosition) => {
           let newVelocity = velocity.current - gravity;
@@ -108,19 +141,22 @@ export default function FomoGame() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isRunning]);
+  }, [isRunning, isRotating]);
 
   // Timer
   useEffect(() => {
     let timer: any;
-    if (isRunning && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsRunning(false);
-      clearInterval(timer);
-      setIsShowMint(true);
+    if (isRunning) {
+      if (timeLeft > 0) {
+        timer = setInterval(() => {
+          setTimeLeft((prev) => prev - 1);
+        }, 1000);
+      } else if (timeLeft === 0) {
+        // setIsRunning(false);
+        clearInterval(timer);
+        setIsRotating(true);
+        // setIsShowMint(true);
+      }
     }
 
     return () => clearInterval(timer);
@@ -136,8 +172,8 @@ export default function FomoGame() {
   };
 
   useEffect(() => {
-    sheet.project.ready.then(() =>
-      sheet.sequence.play({ iterationCount: Infinity, range: [0, 1] }),
+    demoSheet.project.ready.then(() =>
+      demoSheet.sequence.play({ iterationCount: Infinity, range: [0, 1] }),
     );
   }, []);
 
@@ -157,11 +193,8 @@ export default function FomoGame() {
         </div>
       ) : isRunning ? (
         <>
-          <div className="score text-4xl">Metric Points: {score}</div>
-          <div className="absolute left-1/2 top-40 flex -translate-x-1/2 text-center text-3xl">
-            Time Left <br />
-            {timeLeft} s
-          </div>
+          <div className="text-4xl">Metric Points: {score}</div>
+          <div className="text-4xl">Time Left: {timeLeft}</div>
           <div className="absolute bottom-10 left-1/2 z-0 h-[400px] w-[400px] -translate-x-1/2">
             <Canvas
               className="absolute h-full w-full"
@@ -175,26 +208,12 @@ export default function FomoGame() {
               <directionalLight position={[5, 5, 5]} />
 
               {/* Add the model */}
-              {<Bonk />}
-              <Stick />
+              {<Bonk isRotating={isRotating} setIsShowMint={setIsShowMint} />}
+              <Stick position={position} />
 
               {/* Add camera controls */}
               <OrbitControls />
             </Canvas>
-            {
-              // <Canvas
-              //   className="absolute h-full w-full"
-              //   camera={{
-              //     position: [5, 5, -5],
-              //     fov: 75,
-              //   }}
-              // >
-              //   {
-              //     // <Scene position={position} />
-              //   }
-              //   <Model url="/cartoon_bonk.glb" />
-              // </Canvas>
-            }
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
         </>
