@@ -20,7 +20,7 @@ export default defineConfig({
       /** name of certification */
       name: "test",
       /** custom trust domains */
-      domains: ["*.custom.com"],
+      domains: ["*.localhost"],
       /** custom certification directory */
       certDir: "/Users/kidneyweakx/.devServer/cert",
     }),
