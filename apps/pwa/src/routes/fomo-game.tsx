@@ -5,12 +5,11 @@ import { useEffect, useState, useRef } from "react";
 import { MintMemeButton } from "@/components/MintMemeButton";
 import { Canvas } from "@react-three/fiber";
 import { getProject } from "@theatre/core";
-import { SheetProvider, editable as e, PerspectiveCamera } from "@theatre/r3f";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 const sheet = getProject("ikkyu").sheet("Sheet");
 
 function Bonk() {
-  const { nodes, materials } = useGLTF("/cartoon_bonk.glb"); // Load the .glb file
+  const { nodes } = useGLTF("/cartoon_bonk.glb"); // Load the .glb file
   return (
     <group dispose={null}>
       <mesh
@@ -55,29 +54,6 @@ export default function FomoGame() {
   const lastBounceTime = useRef(0);
   const gravity = 0.9;
   const bounceVelocity = 15; // Upward velocity during bounce
-
-  // three.js scene
-  function Scene({ position }: { position: number }) {
-    return (
-      <SheetProvider sheet={sheet}>
-        <PerspectiveCamera
-          theatreKey="Camera"
-          makeDefault
-          position={[0, 2, 5]}
-          fov={75}
-        />
-        <ambientLight intensity={0.5} />
-        <e.pointLight theatreKey="Light" position={[10, 10, 10]} />
-        <e.mesh
-          theatreKey="Torus Kno"
-          rotation={[0, 0, (position * Math.PI) / 180]}
-        >
-          <boxGeometry args={[0.5, 3, 0.5]} />
-          <meshStandardMaterial color="orange" />
-        </e.mesh>
-      </SheetProvider>
-    );
-  }
 
   useEffect(() => {
     let motionListener: any;
