@@ -3,7 +3,7 @@ import { AnchorAirdropEscrow } from "../target/types/anchor_airdrop_escrow";
 import { PublicKey, SystemProgram, Keypair, Transaction } from "@solana/web3.js";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  TOKEN_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID,
   createAssociatedTokenAccountIdempotentInstruction,
   createInitializeMint2Instruction,
   createMintToInstruction,
@@ -24,7 +24,7 @@ describe("anchor-airdrop-escrow", () => {
   const MINT_SIZE = 165;
   // 1. Define the accounts
   // Fill in the token you want to airdrop
-  const mintobasha = new PublicKey("ZEUS1aR7aX8DFFJf5QjWj2ftDDdNTroMNGo8YoQm3Gq");
+  const mintobasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
   // Feel free to change the seed to any number you like
   const seed = new anchor.BN(20240802);
   const escrow = PublicKey.findProgramAddressSync(
@@ -48,7 +48,7 @@ describe("anchor-airdrop-escrow", () => {
     vault,
     obashafrens,
     associatedTokenprogram: ASSOCIATED_TOKEN_PROGRAM_ID,
-    tokenProgram: TOKEN_PROGRAM_ID,
+    tokenProgram: TOKEN_2022_PROGRAM_ID,
     systemProgram: SystemProgram.programId,
   };
 
@@ -74,7 +74,7 @@ describe("anchor-airdrop-escrow", () => {
   };
 
   // // if you want to create a mint and airdrop tokens
-  it("Airdrop and create mints", async () => {
+  xit("Airdrop and create mints", async () => {
     let lamports = await getMinimumBalanceForRentExemptMint(connection);
     let tx = new Transaction();
     tx.instructions = [
@@ -100,7 +100,7 @@ describe("anchor-airdrop-escrow", () => {
   });
 
   // Create a new airdrop(escrow)
-  xit("Initialize", async () => {
+  it("Initialize", async () => {
     const maxAmount = 30e6;
     const oneTimeAmount = 10e6;
     const depositAmount = 100e6;
@@ -113,7 +113,7 @@ describe("anchor-airdrop-escrow", () => {
   });
 
   // Claim the airdrop
-  xit("Claim", async () => {
+  it("Claim", async () => {
     await program.methods
       .claim()
       .accounts({ ...accounts })
@@ -121,7 +121,7 @@ describe("anchor-airdrop-escrow", () => {
       .then(confirm)
       .then(log);
   });
-  xit("Claim", async () => {
+  it("Claim", async () => {
     await program.methods
       .claim()
       .accounts({ ...accounts })
@@ -129,7 +129,7 @@ describe("anchor-airdrop-escrow", () => {
       .then(confirm)
       .then(log);
   });
-  xit("Claim", async () => {
+  it("Claim", async () => {
     await program.methods
       .claim()
       .accounts({ ...accounts })
