@@ -1,0 +1,10 @@
+{
+  "name": "ikkyuz",
+  "binaryPath": "./ikkyuz/target/riscv-guest/riscv32im-risc0-zkvm-elf/docker/ikkyuz/ikkyuz",
+  "imageId": "fa70b97511d738bcb827176ce20033758bc2ef64ab05271fa6590c5e5bb0a4e8",
+  "inputOrder": [
+    "Public"
+  ],
+  "signature": "4jJuHBQrWESbe5VKgGE6VCjW1FFGwYefBfG8xoq7J5FhSXdE2kmDidBmRYZsHhqmBAeV6JUx9pjYwKmGeE64sdh7",
+  "size": 116372
+}

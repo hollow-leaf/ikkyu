@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
-    token::{
-        close_account, transfer_checked, CloseAccount, Mint, Token, TokenAccount, TransferChecked,
+    token_interface::{
+        close_account, transfer_checked, CloseAccount, Mint, TokenInterface, TokenAccount, TransferChecked,
     },
 };
 
@@ -12,13 +12,13 @@ use crate::states::Escrow;
 pub struct Withdraw<'info> {
     #[account(mut)]
     initializer: Signer<'info>,
-    mint_obasha: Account<'info, Mint>,
+    mint_obasha: InterfaceAccount<'info, Mint>,
     #[account(
         mut,
         associated_token::mint = mint_obasha,
         associated_token::authority = initializer
     )]
-    initializer_ata_obasha: Account<'info, TokenAccount>,
+    initializer_ata_obasha: InterfaceAccount<'info, TokenAccount>,
     #[account(
         mut,
         has_one = initializer,
@@ -33,9 +33,9 @@ pub struct Withdraw<'info> {
         associated_token::mint = mint_obasha,
         associated_token::authority = escrow
     )]
-    pub vault: Account<'info, TokenAccount>,
+    pub vault: InterfaceAccount<'info, TokenAccount>,
     associated_token_program: Program<'info, AssociatedToken>,
-    token_program: Program<'info, Token>,
+    token_program: Interface<'info, TokenInterface>,
     system_program: Program<'info, System>,
 }
 
