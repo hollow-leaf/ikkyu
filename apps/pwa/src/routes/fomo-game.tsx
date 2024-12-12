@@ -3,10 +3,47 @@ import "./pump-game.css";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useRef } from "react";
 import { MintMemeButton } from "@/components/MintMemeButton";
-import { Canvas } from '@react-three/fiber'
+import { Canvas } from "@react-three/fiber";
 import { getProject } from "@theatre/core";
-import { SheetProvider, editable as e, PerspectiveCamera } from '@theatre/r3f'
-const demoSheet = getProject('Demo Project').sheet('Demo Sheet')
+import { SheetProvider, editable as e, PerspectiveCamera } from "@theatre/r3f";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+const sheet = getProject("ikkyu").sheet("Sheet");
+
+function Bonk() {
+  const { nodes, materials } = useGLTF("/cartoon_bonk.glb"); // Load the .glb file
+  return (
+    <group dispose={null}>
+      <mesh
+        castShadow
+        receiveShadow
+        //@ts-ignore
+        geometry={nodes.mesh_0.geometry}
+        //@ts-ignore
+        material={nodes.mesh_0.material}
+      />
+    </group>
+  );
+}
+
+function Stick() {
+  const { nodes, materials } = useGLTF("/cartoon_stick.glb");
+  return (
+    <group dispose={null} position={[-0.8, 0, 0.02]}>
+      <group scale={0.01}>
+        <mesh
+          castShadow
+          receiveShadow
+          //@ts-ignore
+          geometry={nodes.MOD_STICK_hatlas_0.geometry}
+          material={materials.hatlas}
+          // y:[2.1, 2.7]
+          rotation={[1, 2.7, 0]}
+          scale={[2, 2, 2]}
+        />
+      </group>
+    </group>
+  );
+}
 
 export default function FomoGame() {
   const [timeLeft, setTimeLeft] = useState(500);
@@ -22,18 +59,26 @@ export default function FomoGame() {
   // three.js scene
   function Scene({ position }: { position: number }) {
     return (
-      <SheetProvider sheet={demoSheet}>
-        <PerspectiveCamera theatreKey="Camera" makeDefault position={[0, 2, 5]} fov={75} />
+      <SheetProvider sheet={sheet}>
+        <PerspectiveCamera
+          theatreKey="Camera"
+          makeDefault
+          position={[0, 2, 5]}
+          fov={75}
+        />
         <ambientLight intensity={0.5} />
         <e.pointLight theatreKey="Light" position={[10, 10, 10]} />
-        <e.mesh theatreKey="Cube" rotation={[0, 0, position * Math.PI / 180]}>
+        <e.mesh
+          theatreKey="Torus Kno"
+          rotation={[0, 0, (position * Math.PI) / 180]}
+        >
           <boxGeometry args={[0.5, 3, 0.5]} />
           <meshStandardMaterial color="orange" />
         </e.mesh>
       </SheetProvider>
     );
   }
-  
+
   useEffect(() => {
     let motionListener: any;
     if (isRunning) {
@@ -115,8 +160,10 @@ export default function FomoGame() {
   };
 
   useEffect(() => {
-    demoSheet.project.ready.then(() => demoSheet.sequence.play({ iterationCount: Infinity, range: [0, 1] }))
-  }, [])
+    sheet.project.ready.then(() =>
+      sheet.sequence.play({ iterationCount: Infinity, range: [0, 1] }),
+    );
+  }, []);
 
   return (
     <div className="relative h-full w-full items-center justify-center">
@@ -139,10 +186,39 @@ export default function FomoGame() {
             Time Left <br />
             {timeLeft} s
           </div>
-          <div className="absolute bottom-10 left-1/2 z-0 h-40 w-40 -translate-x-1/2">
-            <Canvas className="absolute h-full w-full">
-              <Scene position={position} />
+          <div className="absolute bottom-10 left-1/2 z-0 h-[400px] w-[400px] -translate-x-1/2">
+            <Canvas
+              className="absolute h-full w-full"
+              camera={{
+                position: [0, 0, 12],
+                fov: 10,
+              }}
+            >
+              {/* Add lights */}
+              <ambientLight intensity={0.5} />
+              <directionalLight position={[5, 5, 5]} />
+
+              {/* Add the model */}
+              {<Bonk />}
+              <Stick />
+
+              {/* Add camera controls */}
+              <OrbitControls />
             </Canvas>
+            {
+              // <Canvas
+              //   className="absolute h-full w-full"
+              //   camera={{
+              //     position: [5, 5, -5],
+              //     fov: 75,
+              //   }}
+              // >
+              //   {
+              //     // <Scene position={position} />
+              //   }
+              //   <Model url="/cartoon_bonk.glb" />
+              // </Canvas>
+            }
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
         </>
