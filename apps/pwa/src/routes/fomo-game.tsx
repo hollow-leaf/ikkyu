@@ -232,7 +232,6 @@ export default function FomoGame() {
           <Button className="mx-auto mt-4" onClick={startGame}>
             Start
           </Button>
-          <Button className="mx-auto mt-4">Bark</Button>
           <div className="absolute bottom-10 h-40 w-40">
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
