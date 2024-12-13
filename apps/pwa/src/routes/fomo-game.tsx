@@ -87,7 +87,8 @@ export default function FomoGame() {
   const gravity = 0.9;
   const bounceVelocity = 15; // Upward velocity during bounce
   const [isRotating, setIsRotating] = useState(false);
-  console.log("isShowMint", isShowMint);
+  const voice = new Audio("/dog-bark-voice.mp3");
+
   useEffect(() => {
     let motionListener: any;
     if (isRunning) {
@@ -104,6 +105,7 @@ export default function FomoGame() {
           velocity.current = bounceVelocity;
           lastBounceTime.current = currentTime;
           setScore((prev) => prev + 1);
+          voice.play();
         }
       };
 
@@ -163,7 +165,7 @@ export default function FomoGame() {
   }, [isRunning, timeLeft]);
 
   const startGame = () => {
-    setTimeLeft(5);
+    setTimeLeft(15);
     setScore(0); // Reset score
     setPosition(0); // Reset ball position
     velocity.current = 0; // Reset velocity
@@ -230,6 +232,7 @@ export default function FomoGame() {
           <Button className="mx-auto mt-4" onClick={startGame}>
             Start
           </Button>
+          <Button className="mx-auto mt-4">Bark</Button>
           <div className="absolute bottom-10 h-40 w-40">
             <WoodenFishIcon className="h-full w-full fill-white" />
           </div>
