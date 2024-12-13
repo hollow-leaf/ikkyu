@@ -21,8 +21,8 @@ import {
 
 // Token 地址
 export class SolanaTransactionService {
-  private ikkyu = new PublicKey(
-    'BgrKMqeLDLxqy4pf34Gse2CnJxUgyPVR8Uc2r7aM676E'
+  private mintBonk = new PublicKey(
+    'Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG'
   )
 
   private tokenProgram = TOKEN_2022_PROGRAM_ID
@@ -57,7 +57,7 @@ export class SolanaTransactionService {
       ikkyuProgram.programId
     )[0]
     const ownershipBonk = getAssociatedTokenAddressSync(
-      this.ikkyu,
+      this.mintBonk,
       ownership,
       true,
       this.tokenProgram
@@ -69,7 +69,7 @@ export class SolanaTransactionService {
     )[0]
 
     const ownerAtaBonk = getAssociatedTokenAddressSync(
-      this.ikkyu,
+      this.mintBonk,
       ownerKey,
       false,
       this.tokenProgram
@@ -79,7 +79,7 @@ export class SolanaTransactionService {
     const oneTimeAmount = 10e6;
     const depositAmount = 100e6;
     const seed = new anchor.BN(20240802);
-    const mintObasha = new PublicKey("BgrKMqeLDLxqy4pf34Gse2CnJxUgyPVR8Uc2r7aM676E");
+    const mintObasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
     const initializerAtaObasha = getAssociatedTokenAddressSync(mintObasha, ownerKey, false, this.tokenProgram)
     const escrow = PublicKey.findProgramAddressSync(
       [Buffer.from("state"), seed.toArrayLike(Buffer, "le", 8)],
@@ -132,7 +132,7 @@ export class SolanaTransactionService {
       ikkyuProgram.programId
     )[0]
     const ownershipBonk = getAssociatedTokenAddressSync(
-      this.ikkyu,
+      this.mintBonk,
       ownership,
       true,
       this.tokenProgram
@@ -142,14 +142,14 @@ export class SolanaTransactionService {
       ikkyuProgram.programId
     )[0]
     const ownerAtaBonk = getAssociatedTokenAddressSync(
-      this.ikkyu,
+      this.mintBonk,
       ownerKey,
       false,
       this.tokenProgram
     )
 
     const seed = new anchor.BN(20240802);
-    const mintObasha = new PublicKey("BgrKMqeLDLxqy4pf34Gse2CnJxUgyPVR8Uc2r7aM676E");
+    const mintObasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
     const claimerAtaObasha = getAssociatedTokenAddressSync(mintObasha, ownerKey, false, this.tokenProgram)
     const escrow = PublicKey.findProgramAddressSync(
       [Buffer.from("state"), seed.toArrayLike(Buffer, "le", 8)],
