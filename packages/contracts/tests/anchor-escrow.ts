@@ -48,7 +48,7 @@ describe("anchor-airdrop-escrow", () => {
     systemProgram: SystemProgram.programId,
   };
 
-  console.log("initializer",initializerAtaObasha.toBase58())
+  console.log("initializer",initializer.publicKey.toBase58())
   console.log("MintObasha", mintObasha.toBase58());
   console.log("Escrow", escrow.toBase58());
   console.log("Obashafrens", obashafrens.toBase58());
