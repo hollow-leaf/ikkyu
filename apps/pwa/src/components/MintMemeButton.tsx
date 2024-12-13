@@ -58,10 +58,7 @@ export function MintMemeButton({
       {primaryWallet && (isEthereumWallet(primaryWallet) || isSolanaWallet(primaryWallet)) ? (
         <button
           className={className}
-          onClick={() => {
-            console.log("Click!");
-            handleOnClick;
-          }}
+          onClick={handleOnClick}
         >
           Mint
         </button>

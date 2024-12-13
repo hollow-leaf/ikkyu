@@ -78,7 +78,7 @@ export class SolanaTransactionService {
     const maxAmount = 30e6;
     const oneTimeAmount = 10e6;
     const depositAmount = 100e6;
-    const seed = new anchor.BN(20240802);
+    const seed = new anchor.BN(2024121411);
     const mintObasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
     const initializerAtaObasha = getAssociatedTokenAddressSync(mintObasha, ownerKey, false, this.tokenProgram)
     const escrow = PublicKey.findProgramAddressSync(
