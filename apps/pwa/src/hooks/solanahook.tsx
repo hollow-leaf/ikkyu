@@ -1,5 +1,4 @@
 import * as anchor from '@coral-xyz/anchor'
-import { BN } from '@coral-xyz/anchor'
 import AnchorAirdropEscrowJson from '@/idl/anchor_airdrop_escrow.json'
 import { AnchorAirdropEscrow } from '@/idl/anchor_airdrop_escrow'
 import {
@@ -9,6 +8,7 @@ import {
 } from '@dynamic-labs/solana-core'
 import {
   Connection,
+  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   Transaction
@@ -43,6 +43,7 @@ export class SolanaTransactionService {
 
   // Create Meme tokens
   public async createMemeToken(name: string, symbol: string, imageUrl: string, description: string): Promise<string> {
+    console.log(name, symbol, imageUrl, description);
     const connection = await this.getConnection()
     const signer = await this.getSigner()
 
@@ -74,11 +75,14 @@ export class SolanaTransactionService {
       false,
       this.tokenProgram
     )
+    console.log(ownershipBonk, providerVault, ownerAtaBonk)
 
     const maxAmount = 30e6;
     const oneTimeAmount = 10e6;
     const depositAmount = 100e6;
-    const seed = new anchor.BN(2024121411);
+    const timestamp = Date.now();
+    const lastEightDigits = Number(timestamp.toString().slice(-8));
+    const seed = new anchor.BN(lastEightDigits);
     const mintObasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
     const initializerAtaObasha = getAssociatedTokenAddressSync(mintObasha, ownerKey, false, this.tokenProgram)
     const escrow = PublicKey.findProgramAddressSync(
@@ -117,6 +121,7 @@ export class SolanaTransactionService {
 
   // Mint Meme Tokens
   public async mintMemeToken(amount: number, receiver: string): Promise<string> {
+    console.log(amount, receiver);
     const connection = await this.getConnection()
     const signer = await this.getSigner()
 
@@ -147,8 +152,11 @@ export class SolanaTransactionService {
       false,
       this.tokenProgram
     )
+    console.log(ownershipBonk, providerVault, ownerAtaBonk)
 
-    const seed = new anchor.BN(20240802);
+    const timestamp = Date.now();
+    const lastEightDigits = Number(timestamp.toString().slice(-8));
+    const seed = new anchor.BN(lastEightDigits);
     const mintObasha = new PublicKey("Aqk2sTGwLuojdYSHDLCXgidGNUQeskWS2JbKXPksHdaG");
     const claimerAtaObasha = getAssociatedTokenAddressSync(mintObasha, ownerKey, false, this.tokenProgram)
     const escrow = PublicKey.findProgramAddressSync(
@@ -191,5 +199,13 @@ export class SolanaTransactionService {
     }
   }
 
+  public async useRequestAirdrop({ address }: { address: PublicKey }) {
+    const connection = await this.getConnection()
+    const [latestBlockhash, signature] = await Promise.all([
+      connection.getLatestBlockhash(),
+      connection.requestAirdrop(address, 5 * LAMPORTS_PER_SOL),
+    ])
+    await connection.confirmTransaction({ signature, ...latestBlockhash }, 'confirmed')
+  }
 
 }

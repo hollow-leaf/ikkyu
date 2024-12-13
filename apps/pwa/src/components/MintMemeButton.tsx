@@ -1,4 +1,4 @@
-import { useAccount, useWriteContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import { Token } from "../../pkg/contracts/Token";
 import { useState } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
@@ -21,6 +21,7 @@ export function MintMemeButton({
   className,
 }: MintMemeButtonProps) {
   const [isSuccess, setIsSuccess] = useState(false);
+  console.log('isSuccess:', isSuccess);
   const { writeContract, isError, failureReason } = useWriteContract();
 
   const { primaryWallet } = useDynamicContext()
