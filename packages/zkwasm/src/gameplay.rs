@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use wasm_bindgen::prelude::*;
 
 pub const MAX_POSITION: u64 = 10;
+pub const WINNING_MERITS: u64 = 100; // 定義通過遊戲所需的 merits
 pub static GAME_STATE: Lazy<Mutex<RustGameState>> = Lazy::new(|| Mutex::new(RustGameState::new()));
 
 /* STATEFUL FUNCTIONS This defines the initialization of the game*/
@@ -13,32 +14,21 @@ pub fn initialize_game(total_steps: u64, current_position: u64) {
 
     game_state.total_steps = total_steps;
     game_state.current_position = current_position;
+    game_state.merits = 0; // 初始化 merits
 }
 
-/* STATEFUL FUNCTIONS This is defines the logic when player moves one step/entering one command*/
+/* STATEFUL FUNCTIONS This defines the logic when player adds merits points */
 #[wasm_bindgen]
-pub fn step(input: u64) {
+pub fn add_merits(points: u64) {
     let mut game_state = GAME_STATE.lock().unwrap();
 
-    match input {
-        0 => {
-            if game_state.current_position != 0 {
-                game_state.current_position -= 1;
+    game_state.merits += points;
+    game_state.total_steps += 1;
 
-                game_state.total_steps += 1;
-            }
-        }
-        1 => {
-            if game_state.current_position != MAX_POSITION {
-                game_state.current_position += 1;
-
-                game_state.total_steps += 1;
-            }
-        }
-        _ => {
-            panic!("Invalid command");
-        }
-    };
+    if game_state.merits >= WINNING_MERITS {
+        // 通過遊戲的邏輯
+        // 可以在這裡添加更多的處理，例如設置遊戲狀態為通過等
+    }
 }
 
 /* PURE FUNCTIONS This function returns the game state, but parse into Json, so can be used in Javascript */
