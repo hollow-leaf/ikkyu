@@ -37,6 +37,8 @@ Ikkyu addresses this gap with:
 
 #### On-Chain Contract:
 - Solana Devnet: [3aJpgwPr5yRnmZdfhr9yv8ptfYwyGKS6axy1DrHgCmxz](https://explorer.solana.com/address/3aJpgwPr5yRnmZdfhr9yv8ptfYwyGKS6axy1DrHgCmxz?cluster=devnet)
+- Bonsol Image ID: fa70b97511d738bcb827176ce20033758bc2ef64ab05271fa6590c5e5bb0a4e8
+- Bonsol Deployed Issue: https://github.com/anagrambuild/bonsol/issues/108
 
 #### Turborepo Structure:
 - **ZKWASM Module:** `packages/zkwasm` – Implements zero-knowledge proofs for gaming.
@@ -57,3 +59,29 @@ anchor build
 bun run deploy
 ```
 Ikkyu isn’t just a platform—it’s a movement, a culture, and a tool for meme enthusiasts to thrive in the decentralized economy. Let’s pump, play, and make history together!
+
+### Flow Chart
+```mermaid
+sequenceDiagram
+    participant User
+    participant Phone
+    participant ZKWASM
+    participant ETH_Contract
+    participant BonSol
+    participant Solana_Contract
+
+
+    User ->> Phone: Interact via Pump Action
+    Phone ->> ZKWASM: Send Activity Data
+    ZKWASM ->> ETH_Contract: Verify Proof
+    ETH_Contract ->> BonSol: Forward Verified Data
+    BonSol ->> Solana_Contract: Update State
+```
+
+```mermaid
+sequenceDiagram
+    participant Bonk_Token
+    User ->> Phone: Direct Interaction
+    Phone ->> Solana_Contract: Request Token Pump
+    Solana_Contract ->> Bonk_Token: Mint Bonk Token
+```
